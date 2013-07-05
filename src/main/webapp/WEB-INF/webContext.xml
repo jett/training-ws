@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+        <!--http://www.springframework.org/schema/jdbc-->
+        <!--http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">-->
+
+    <!--properties-->
+    <context:property-placeholder location="classpath:app.properties" ignore-unresolvable="true" local-override="true" />
+
+    <context:annotation-config/>
+
+    <bean id="appProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:app.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true" />
+    </bean>
+    <!--end properties-->
+
+    <!--data source-->
+    <bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+          <property name="driverClassName" value="#{appProperties['jdbc.driverClassName']}"/>
+          <property name="url" value="#{appProperties['jdbc.url']}"/>
+          <property name="username" value="#{appProperties['jdbc.username']}"/>
+          <property name="password" value="#{appProperties['jdbc.password']}"/>
+          <property name="validationQuery" value="Select 1 from INFORMATION_SCHEMA.SYSTEM_USERS"/>
+      </bean>
+    <!--end data source-->
+
+    <bean id="mySessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="myDataSource" />
+        <!--<property name="mappingDirectoryLocations">-->
+        <!--<list>-->
+        <!--<value>classpath:hibernate/domains</value>-->
+        <!--</list>-->
+        <!--</property>-->
+
+        <!--<property name="annotatedClasses">-->
+        <!--<list>-->
+        <!--<value>com.ucpb.tbs.domain.AdviseSlip</value>-->
+        <!--<value>com.ucpb.tbs.domain.AdviseSlipId</value>-->
+        <!--<value>com.ucpb.tbs.domain.TrustAccount</value>-->
+        <!--</list>-->
+        <!--</property>-->
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <!--<prop key="hibernate.hbm2ddl.import_files">${hibernate.bootstrap}</prop>-->
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.connection.pool_size">${hibernate.connection.pool_size}</prop>
+                <prop key="hibernate.transaction.jta.platform">
+                    org.hibernate.service.jta.platform.internal.BitronixJtaPlatform
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--transaction manager-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="mySessionFactory" />
+        <property name="globalRollbackOnParticipationFailure" value="false" />
+    </bean>
+
+    <bean id="sharedTransactionTemplate"
+          class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <!--end transaction manager-->
+
+</beans>

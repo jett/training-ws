@@ -1,0 +1,49 @@
+<web-app>
+
+  <display-name>training-ws</display-name>
+
+    <!--<context-param>-->
+        <!--<param-name>resteasy.resources</param-name>-->
+        <!--<param-value>-->
+            <!--com.ucpb.tbs.rest.AdviseSlipRestService-->
+        <!--</param-value>-->
+    <!--</context-param>-->
+
+    <!-- Auto scan REST service -->
+    <!--<context-param>-->
+        <!--<param-name>resteasy.scan</param-name>-->
+        <!--<param-value>true</param-value>-->
+    <!--</context-param>-->
+
+    <context-param>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/api</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+        </listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/webContext.xml</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
