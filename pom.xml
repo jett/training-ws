@@ -18,11 +18,12 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>com.incuventure</groupId>-->
-            <!--<artifactId>dddcqrs</artifactId>-->
-            <!--<version>1.0-SNAPSHOT</version>-->
-        <!--</dependency>-->
+        <!-- placeholder for IntelliJ convenience -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.8.6</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -240,9 +241,9 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <!--<version>9.0.3.v20130506</version>-->
                 <configuration>
-                    <scanTargets>
-                        <scanTarget>target/classes/</scanTarget>
-                    </scanTargets>
+                    <!--<scanTargets>-->
+                        <!--<scanTarget>target/classes/</scanTarget>-->
+                    <!--</scanTargets>-->
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                     <connectors>
                         <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
